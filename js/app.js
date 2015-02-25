@@ -23,42 +23,51 @@ $(document).ready(function(){
   	// Start a new game
   	$(".new").click(newGame);
 
-  	// Give feedback to the user when a new value is submitted
+  	// The user submits a guess
   	$("#guessButton").click( function submitValue(e) {
   		e.preventDefault();
   		feedback(secretNum);
+  		counter();
+  		$("#userGuess").val("");
   	});
 
-  	// Function that reloads the page in order to start a new game  
+  	// Reload the page to start a new game  
   	function newGame(){
   		location.reload();
   	}
 
-  	// Function that gives the appropiate feedback to the user input
+  	// Track how many guess the user has made
+  	function counter(){
+  		var count = $("#count").html();
+  		count++;
+  		return $("#count").html(count);
+  	};
+
+  	// Give the appropiate feedback to the user input
   	function feedback(num){
 
   		var input = $("#userGuess").val();
   		var distance = Math.abs(num - (+input));
 
   		if (distance > 0 && distance <= 10) {
-  			alert("Very hot");
+  			$("#feedback").html("Very hot");
   		}
   		else if (distance > 10 && distance <= 20) {
-  			alert("Hot");
+  			$("#feedback").html("Hot");
   		}
   		else if (distance > 20 && distance <= 30) {
-  			alert("Warm");
+  			$("#feedback").html("Warm");
   		}
   		else if (distance > 30 && distance <= 50) {
-  			alert("Cold");
+  			$("#feedback").html("Cold");
   		}
   		else if (distance > 50) {
-  			alert("Ice cold");
+  			$("#feedback").html("Ice cold");
   		}
   		else if (distance == 0) {
-  			alert("Congratulations!");
+  			$("#feedback").html("Congratulations!");
   		}
-  		$("#userGuess").val("");
+
 
   	}
 
