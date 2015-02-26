@@ -20,36 +20,46 @@ $(document).ready(function(){
   	var secretNum = Math.floor(Math.random()*100)+1;
   	console.log(secretNum);
 
-  	// Start a new game
+  	// Start a new game when the user clicks the "New Game" button
   	$(".new").click(newGame);
 
-  	// The user submits a guess
-  	$("#guessButton").click( function submitValue(e) {
-  		e.preventDefault();
-  		var userGuess = $("#userGuess").val();
-		feedback(secretNum, userGuess);
-  		counter();
-  		guessList(userGuess);
-  		$("#userGuess").val("");
-  		
-  	});
+  	// Run the game when the user submits a value
+  	$(".game form").submit(submitValue);
+
+
+  	/* Functions
+  	---------------------------------------------------*/
+
 
   	// Reload the page to start a new game  
   	function newGame(){
   		location.reload();
   	}
+  	
+  	// Take the value supplied and respond accordingly
+  	function submitValue(e) {
 
-  	// Track how many guess the user has made
-  	function counter(){
-  		var count = $("#count").html();
-  		count++;
-  		return $("#count").html(count);
-  	};
+  		// Prevent page reload
+  		e.preventDefault();
+  		// Take the value supplied
+  		var userGuess = $("#userGuess").val();
+  		// If it is not an integer between 0 and 100, display a message
+  		if ( userGuess > 100 || userGuess < 0 || isNaN(+userGuess) || userGuess.indexOf(".") !== -1 || /^\s+$/.test(userGuess) ) {
+  			$("#feedback").html("Please, supply an integer between 1 and 100.");
+  		// Else, it is a valid numeric value. Run the game
+  		} else {
+			feedback(secretNum, userGuess);
+	  		counter();
+	  		guessList(userGuess);
+	  	}
+	  	// Clean the text input afterwards
+  		$("#userGuess").val("");
+  		
+  	}
 
   	// Give the appropiate feedback to the user input
   	function feedback(num, input){
 
-  		// var input = $("#userGuess").val();
   		var distance = Math.abs(num - (+input));
 
   		if (distance > 0 && distance <= 10) {
@@ -72,6 +82,13 @@ $(document).ready(function(){
   		}
   	}
 
+  	// Track how many guess the user has made
+  	function counter(){
+  		var count = $("#count").html();
+  		count++;
+  		return $("#count").html(count);
+  	};
+
   	// Supply new item to the list of numbers the user has guessed so far
   	function guessList(input){
   		var newItem = "";
@@ -80,10 +97,6 @@ $(document).ready(function(){
   		newItem += "</li>";
   		$("#guessList").append(newItem);
   	};
-
-
-  	
-
 
 
 });
