@@ -26,9 +26,12 @@ $(document).ready(function(){
   	// The user submits a guess
   	$("#guessButton").click( function submitValue(e) {
   		e.preventDefault();
-  		feedback(secretNum);
+  		var userGuess = $("#userGuess").val();
+		feedback(secretNum, userGuess);
   		counter();
+  		guessList(userGuess);
   		$("#userGuess").val("");
+  		
   	});
 
   	// Reload the page to start a new game  
@@ -44,9 +47,9 @@ $(document).ready(function(){
   	};
 
   	// Give the appropiate feedback to the user input
-  	function feedback(num){
+  	function feedback(num, input){
 
-  		var input = $("#userGuess").val();
+  		// var input = $("#userGuess").val();
   		var distance = Math.abs(num - (+input));
 
   		if (distance > 0 && distance <= 10) {
@@ -65,11 +68,18 @@ $(document).ready(function(){
   			$("#feedback").html("Ice cold");
   		}
   		else if (distance == 0) {
-  			$("#feedback").html("Congratulations!");
+  			$("#feedback").html("Congratulations! The secret number is "+num+".");
   		}
-
-
   	}
+
+  	// Supply new item to the list of numbers the user has guessed so far
+  	function guessList(input){
+  		var newItem = "";
+  		newItem += "<li>";
+  		newItem += input;
+  		newItem += "</li>";
+  		$("#guessList").append(newItem);
+  	};
 
 
   	
