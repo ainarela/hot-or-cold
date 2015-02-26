@@ -60,26 +60,47 @@ $(document).ready(function(){
   	// Give the appropiate feedback to the user input
   	function feedback(num, input){
 
-  		var distance = Math.abs(num - (+input));
+  		var prevInput = $("#guessList li").last().html();
+  			distance = Math.abs(num - (+input));
+  			prevDistance = Math.abs(num - (+prevInput));
 
-  		if (distance > 0 && distance <= 10) {
+  		// Provide absolute feedback if it's the first guess or if the most recent guess and the previous one are the same number
+  		if ( distance !== 0 && ( isNaN(prevDistance) || prevInput == input )) {
+
+  			if (distance > 0 && distance <= 10) {
   			$("#feedback").html("Very hot");
-  		}
-  		else if (distance > 10 && distance <= 20) {
-  			$("#feedback").html("Hot");
-  		}
-  		else if (distance > 20 && distance <= 30) {
-  			$("#feedback").html("Warm");
-  		}
-  		else if (distance > 30 && distance <= 50) {
-  			$("#feedback").html("Cold");
-  		}
-  		else if (distance > 50) {
-  			$("#feedback").html("Ice cold");
-  		}
-  		else if (distance == 0) {
+	  		}
+	  		else if (distance > 10 && distance <= 20) {
+	  			$("#feedback").html("Hot");
+	  		}
+	  		else if (distance > 20 && distance <= 30) {
+	  			$("#feedback").html("Warm");
+	  		}
+	  		else if (distance > 30 && distance <= 50) {
+	  			$("#feedback").html("Cold");
+	  		}
+	  		else if (distance > 50) {
+	  			$("#feedback").html("Ice cold");
+	  		}
+  		} 
+  		// Provide feedback about the most recent guess in relation to the previous one
+  		if ( distance !== 0 ) {
+
+  			if ( distance < prevDistance ) {
+  				$("#feedback").html("Warmer");
+  			}
+
+  			if ( distance > prevDistance ) {
+  				$("#feedback").html("Colder");
+  			}
+  		} 
+  		// Provide feedback if the user guess the secret number
+  		if ( distance == 0 ) {
+
   			$("#feedback").html("Congratulations! The secret number is "+num+".");
   		}
+
+  		
   	}
 
   	// Track how many guess the user has made
