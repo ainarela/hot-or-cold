@@ -18,7 +18,7 @@ $(document).ready(function(){
 
   	// Generate secret integer between 1 and 100 when the page loads
   	var secretNum = Math.floor(Math.random()*100)+1;
-  	console.log(secretNum);
+  	// console.log(secretNum);
 
   	// Start a new game when the user clicks the "New Game" button
   	$(".new").click(newGame);
@@ -63,44 +63,53 @@ $(document).ready(function(){
   		var prevInput = $("#guessList li").last().html();
   			distance = Math.abs(num - (+input));
   			prevDistance = Math.abs(num - (+prevInput));
-
-  		// Provide absolute feedback if it's the first guess or if the most recent guess and the previous one are the same number
-  		if ( distance !== 0 && ( isNaN(prevDistance) || prevInput == input )) {
-
-  			if (distance > 0 && distance <= 10) {
-  			$("#feedback").html("Very hot");
-	  		}
-	  		else if (distance > 10 && distance <= 20) {
-	  			$("#feedback").html("Hot");
-	  		}
-	  		else if (distance > 20 && distance <= 30) {
-	  			$("#feedback").html("Warm");
-	  		}
-	  		else if (distance > 30 && distance <= 50) {
-	  			$("#feedback").html("Cold");
-	  		}
-	  		else if (distance > 50) {
-	  			$("#feedback").html("Ice cold");
-	  		}
-  		} 
-  		// Provide feedback about the most recent guess in relation to the previous one
-  		if ( distance !== 0 ) {
-
-  			if ( distance < prevDistance ) {
-  				$("#feedback").html("Warmer");
+  			msg = getTemp();
+ 
+  			if ( msg === "error"){
+  				console.log("Error");
+  				msg = "";
+  			} else if ( msg === "winner"){
+  				msg = "Congratulations! The secret number is "+num;
+  			} else {
+  				msg += getClue();
   			}
 
-  			if ( distance > prevDistance ) {
-  				$("#feedback").html("Colder");
-  			}
-  		} 
-  		// Provide feedback if the user guess the secret number
-  		if ( distance == 0 ) {
+  			$("#feedback").html(msg);
 
-  			$("#feedback").html("Congratulations! The secret number is "+num+".");
+  	}
+
+  	// Tell users how far they are from the secret number
+  	function getTemp(){
+  		var temp = "error";
+  		if ( distance === 0 ){
+  			temp = "winner";
+  		} else if ( distance > 50 ){
+  			temp = "Ice cold";
+  		} else if ( distance > 30 ){
+  			temp = "Cold";
+  		} else if ( distance > 20 ){
+  			temp = "Warm";
+  		} else if ( distance > 10 ){
+  			temp = "Hot";
+  		} else if ( distance > 0){
+  			temp = "Very hot";
   		}
+  		return temp;
+  	};
 
-  		
+  	// Tell users if they are "warmer" or "colder" relative to their previous guess
+  	function getClue(){
+  		var clue = "";
+  		if ( distance < prevDistance ) {
+			clue += '</br><span class="clue">';
+			clue += "You are getting warmer";
+			clue += "</span>";
+		} else if ( distance > prevDistance ) {
+			clue += '</br><span class="clue">';
+			clue += "You are getting colder";
+			clue += "</span>";
+		}
+		return clue;
   	}
 
   	// Track how many guess the user has made
